@@ -1,11 +1,12 @@
-import express from "express"
-import cors from "cors"
-import authRoutes from "./routes/authRoutes"
+import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/authRoutes";
+import invoiceRoutes from "./routes/invoiceRoutes"; 
 
 import { PrismaClient } from "../generated/prisma";
 
 import 'dotenv/config'
-// import './cron/exchangeRateJob'
+import './cron/exchangeRateJob'
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,8 +26,7 @@ app.use(cors())
    .use(express.json())
    .use(express.urlencoded({ extended: true }))
    .use("/api/auth", authRoutes)
-
-
+   .use("/api/invoice", invoiceRoutes);
 
 app.get("/", (req, res) => {
     res.send("Bienvenue sur g l'API de l'application génération de facture !");
