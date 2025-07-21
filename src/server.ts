@@ -1,5 +1,6 @@
 import express from "express"
 import cors from "cors"
+import authRoutes from "./routes/authRoutes"
 
 import { PrismaClient } from "../generated/prisma";
 
@@ -10,10 +11,6 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const prisma = new PrismaClient();
 
-app.use(cors())
-   .use(express.json())
-   .use(express.urlencoded({ extended: true }));
-
 (async () => {
     try {
         await prisma.$connect();
@@ -23,6 +20,12 @@ app.use(cors())
         process.exit(1);
     }
 })();
+
+app.use(cors())
+   .use(express.json())
+   .use(express.urlencoded({ extended: true }))
+   .use("/api/auth", authRoutes)
+
 
 
 app.get("/", (req, res) => {
