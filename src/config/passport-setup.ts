@@ -5,13 +5,14 @@ import { PrismaClient } from "../../generated/prisma";
 const prisma = new PrismaClient();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID";
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "YOUR_GOOGLE_CLIENT_SECRET";
+const GOOGLE_CALLBACK_URL= process.env.GOOGLE_CALLBACK_URL
 
 passport.use(
     new GoogleStrategy(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "/api/auth/google/callback",
+            callbackURL: GOOGLE_CALLBACK_URL || "http://localhost:3001/api/auth/google/callback",
         },
         async (accessToken, refreshToken, profile, done) => {
             const email = profile.emails?.[0]?.value;
