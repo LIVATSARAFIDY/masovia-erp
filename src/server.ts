@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes";
 import invoiceRoutes from "./routes/invoiceRoutes"; 
+import passport from "passport";
+import session from "express-session"
 
 import { PrismaClient } from "../generated/prisma";
 
@@ -25,6 +27,19 @@ const prisma = new PrismaClient();
 app.use(cors())
    .use(express.json())
    .use(express.urlencoded({ extended: true }))
+   .use(
+        session({
+            secret: process.env.SESSION_SECRET || "keyboard cat",
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 24 * 60 * 60 * 1000, // 24 heures
+                },
+            })
+    )
+   .use(passport.initialize())
+   .use(passport.session())
    .use("/api/auth", authRoutes)
    .use("/api/invoice", invoiceRoutes);
 
